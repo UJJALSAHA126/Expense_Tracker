@@ -3,6 +3,7 @@ package com.example.expensestracker
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.expensestracker.constants.Converters.Companion.getDate
 import com.example.expensestracker.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -11,10 +12,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val millis = System.currentTimeMillis()
+        val date = getDate(millis)
 
-        binding.addRecordFAB.setOnLongClickListener {
-            Toast.makeText(this, "Long Clicked", Toast.LENGTH_SHORT).show()
-            false
-        }
     }
 }

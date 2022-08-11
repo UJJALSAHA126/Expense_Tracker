@@ -7,14 +7,73 @@
     android:layout_marginTop="5dp"
     android:layout_marginEnd="5dp"
     android:background="@drawable/round_corner"
-    android:paddingTop="50dp"
-    android:paddingBottom="50dp"
-    android:padding="3dp">
+    android:paddingStart="10dp"
+    android:paddingTop="5dp"
+    android:paddingEnd="10dp"
+    android:paddingBottom="7dp">
+
+    <TextView
+        android:id="@+id/recordNoTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/incomeOrNotTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Earned"
+        android:textAllCaps="true"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recordNoTxt" />
+
+
+    <TextView
+        android:id="@+id/amountTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:text="Amount: "
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@id/incomeOrNotTxt"
+        app:layout_constraintEnd_toStartOf="@id/dateTXT"
+        app:layout_constraintTop_toBottomOf="@id/recordNoTxt" />
+
+    <TextView
+        android:id="@+id/dateTXT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:text="12/08/2022"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recordNoTxt" />
+
+
+    <TextView
+        android:id="@+id/detailsTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Detils"
+        android:textColor="#403F3F"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/amountTxt" />
 
     <View
         android:id="@+id/light"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:background="@drawable/green_circle"
         app:layout_constraintBaseline_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
