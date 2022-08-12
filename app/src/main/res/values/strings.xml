@@ -3,4 +3,5 @@
     <string name="add_record">Add Record</string>
     <string name="Rs">\u20B9</string>
     <string name="rs">\u20A8</string>
+    <string name="description">Description</string>
 </resources>

@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLay"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="5dp"
     android:layout_marginTop="5dp"
     android:layout_marginEnd="5dp"
-    android:background="@drawable/round_corner"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/round_corner_green"
     android:paddingStart="10dp"
     android:paddingTop="5dp"
+    android:elevation="10dp"
     android:paddingEnd="10dp"
-    android:paddingBottom="7dp">
+    android:paddingBottom="10dp">
+
+
+    <View
+        android:id="@+id/light"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/green_circle"
+        app:layout_constraintBaseline_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/recordNoTxt"
@@ -18,7 +30,7 @@
         android:layout_height="wrap_content"
         android:text="1"
         android:textColor="@color/black"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBaseline_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -30,53 +42,79 @@
         android:text="Earned"
         android:textAllCaps="true"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recordNoTxt" />
 
-
-    <TextView
-        android:id="@+id/amountTxt"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:text="Amount: "
-        android:textColor="@color/black"
-        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@id/dateRL"
         app:layout_constraintStart_toEndOf="@id/incomeOrNotTxt"
-        app:layout_constraintEnd_toStartOf="@id/dateTXT"
-        app:layout_constraintTop_toBottomOf="@id/recordNoTxt" />
+        app:layout_constraintTop_toBottomOf="@id/recordNoTxt">
 
-    <TextView
-        android:id="@+id/dateTXT"
+        <TextView
+            android:id="@+id/rsSymbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Rs"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/amountTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:text="1000"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/dateRL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:text="12/08/2022"
-        android:textColor="@color/black"
-        android:textSize="16sp"
+        android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recordNoTxt" />
+        app:layout_constraintTop_toBottomOf="@id/light">
+
+        <TextView
+            android:id="@+id/dateTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="end"
+            android:text="12/08/2022"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/timeTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dateTxt"
+            android:layout_alignEnd="@id/dateTxt"
+            android:text="05:30 PM"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
 
 
     <TextView
-        android:id="@+id/detailsTxt"
+        android:id="@+id/descriptionTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:text="Detils"
+        android:hint="@string/description"
+        android:maxLines="2"
+        android:text="555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555"
         android:textColor="#403F3F"
-        android:textSize="15sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/amountTxt" />
-
-    <View
-        android:id="@+id/light"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:background="@drawable/green_circle"
-        app:layout_constraintBaseline_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/dateRL" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
