@@ -10,4 +10,8 @@
     <string name="cancel">Cancel</string>
     <string name="enter_some_details">Enter Some Details</string>
     <string name="add">Add</string>
+    <string name="dummy_date">08/11/2000</string>
+    <string name="dummy_time">12:40 AM</string>
+    <string name="filter">Filter</string>
+    <string name="search_records_between_two_dates">Search Records Between Two Dates</string>
 </resources>

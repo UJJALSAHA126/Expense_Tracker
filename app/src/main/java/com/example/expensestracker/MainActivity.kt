@@ -8,7 +8,8 @@ import com.example.expensestracker.data.MyData
 import com.example.expensestracker.databinding.ActivityMainBinding
 import com.example.expensestracker.databinding.PopUpLayoutBinding
 import com.example.expensestracker.myDataBase.MySQLiteDB
-import com.example.expensestracker.popUpDialog.CustomDialog
+import com.example.expensestracker.popUpDialog.AddUpdateDialog
+import com.example.expensestracker.popUpDialog.FilterDateDialog
 import com.example.expensestracker.recyclerViewAdapter.MyRVAdapter
 
 class MainActivity : AppCompatActivity() {
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         loadAllData(myRVAdapter)
 
         binding.addRecordFAB.setOnClickListener {
-            val customDialog = CustomDialog(this, this, null, { dialog, binding, time ->
+            val addUpdateDialog = AddUpdateDialog(this, this, null, { dialog, binding, time ->
                 addRecord(binding, time)
                 Toast.makeText(this, "Add Clicked", Toast.LENGTH_SHORT).show()
                 loadAllData(myRVAdapter)
@@ -37,7 +38,12 @@ class MainActivity : AppCompatActivity() {
             }, {
                 it.stopLoading()
             })
-            customDialog.startLoading()
+            addUpdateDialog.startLoading()
+        }
+
+        binding.toolBar.setOnClickListener {
+            val dialog = FilterDateDialog(this, this)
+            dialog.startLoading()
         }
     }
 

@@ -14,12 +14,12 @@ import com.example.expensestracker.databinding.PopUpLayoutBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CustomDialog(
+class AddUpdateDialog(
     private val activity: Activity,
     private val context: Context,
     private val data: MyData? = null,
-    private val addClicked: (CustomDialog, PopUpLayoutBinding, String) -> Unit,
-    private val cancelClicked: (CustomDialog) -> Unit,
+    private val addClicked: (AddUpdateDialog, PopUpLayoutBinding, String) -> Unit,
+    private val cancelClicked: (AddUpdateDialog) -> Unit,
 ) {
 
     private var dialog: Dialog? = null

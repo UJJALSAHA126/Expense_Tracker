@@ -77,7 +77,7 @@
             android:layout_weight="1"
             android:background="@drawable/pop_up_back"
             android:padding="3dp"
-            android:text="08/11/2000"
+            android:text="@string/dummy_date"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="23sp" />
@@ -90,7 +90,7 @@
             android:layout_weight="1"
             android:background="@drawable/pop_up_back"
             android:padding="3dp"
-            android:text="12:40 AM"
+            android:text="@string/dummy_time"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="23sp" />

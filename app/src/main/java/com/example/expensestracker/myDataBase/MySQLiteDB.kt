@@ -39,4 +39,10 @@ class MySQLiteDB(private var context: Context) :
         val db = this.readableDatabase ?: return null
         return db.rawQuery(query, null)
     }
+
+    fun getFilteredData(timeS: String, timeE: String): Cursor? {
+        val query = "SELECT * FROM $TABLE_NAME WHERE TIME >= $timeS AND TIME <= $timeE ORDER BY TIME DESC"
+        val db = this.readableDatabase ?: return null
+        return db.rawQuery(query, null)
+    }
 }
