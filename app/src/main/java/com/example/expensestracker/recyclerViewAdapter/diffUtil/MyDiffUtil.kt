@@ -3,14 +3,14 @@ package com.example.expensestracker.recyclerViewAdapter.diffUtil
 import androidx.recyclerview.widget.DiffUtil
 import com.example.expensestracker.data.MyData
 
-class MyDiffUtil : DiffUtil.Callback() {
-    private var oldList = ArrayList<MyData>()
-    private var newList = ArrayList<MyData>()
+class MyDiffUtil(private val oldList: ArrayList<MyData>, private val newList: ArrayList<MyData>) : DiffUtil.Callback() {
+//    private var oldList = ArrayList<MyData>()
+//    private var newList = ArrayList<MyData>()
 
-    fun setData(oldL: ArrayList<MyData>, newL: ArrayList<MyData>) {
-        oldList = oldL
-        newList = newL
-    }
+//    fun setData(oldL: ArrayList<MyData>, newL: ArrayList<MyData>) {
+//        oldList = oldL
+//        newList = newL
+//    }
 
     override fun getOldListSize(): Int {
         return oldList.size;

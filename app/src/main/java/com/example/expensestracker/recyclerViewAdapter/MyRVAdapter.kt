@@ -1,6 +1,5 @@
 package com.example.expensestracker.recyclerViewAdapter
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -16,7 +15,7 @@ class MyRVAdapter(private val activity: MainActivity) :
     RecyclerView.Adapter<MyRVAdapter.MYRVViewHolder>() {
 
     private var listOfRecord = ArrayList<MyData>()
-    private val myDiffUtil = MyDiffUtil()
+//    private val myDiffUtil = MyDiffUtil()
 
     inner class MYRVViewHolder(val binding: RvLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -31,26 +30,27 @@ class MyRVAdapter(private val activity: MainActivity) :
         val binding = holder.binding
         val record = listOfRecord[position]
         bindData(binding, record, position + 1)
-
     }
 
     private fun bindData(binding: RvLayoutBinding, record: MyData, pos: Int) {
-        val dateTime = getDate(record.time)
+        val dateTime = getDate(record.time.toLong())
+        println("$pos -> ${dateTime[0]}  ||  ${dateTime[1]}")
+        println(record.toString())
 
-        binding.rootLay.setBackgroundResource(if (record.isIncome) R.drawable.round_corner_green else R.drawable.round_corner_red)
+        binding.rootLay.setBackgroundResource(if (record.isIncome == 1) R.drawable.round_corner_green else R.drawable.round_corner_red)
 
-        binding.light.setBackgroundResource(if (record.isIncome) R.drawable.green_circle else R.drawable.red_circle)
-        binding.recordNoTxt.text = pos.toString()
-        binding.incomeOrNotTxt.text = if (record.isIncome) "Earned" else "Spent"
+        binding.light.setBackgroundResource(if (record.isIncome == 1) R.drawable.green_circle else R.drawable.red_circle)
+        binding.incomeOrNotTxt.text = if (record.isIncome == 1) "Earned" else "Spent"
         binding.dateTxt.text = dateTime[0]
         binding.timeTxt.text = dateTime[1]
 
 //        val amount = "${activity.resources.getText(R.string.Rs)} ${record.amount}"
         binding.amountTxt.text = record.amount.toString()
 
-        val desc = if (record.description.length > 90) {
-            record.description.substring(0, 86) + "..."
+        val desc = if (record.description.length > 20) {
+            record.description.substring(0, 20) + "..."
         } else record.description
+
         binding.descriptionTxt.text = desc
 
     }
@@ -59,13 +59,20 @@ class MyRVAdapter(private val activity: MainActivity) :
         return listOfRecord.size;
     }
 
-    fun setDate(newList: ArrayList<MyData>) {
-        myDiffUtil.setData(listOfRecord, newList)
+    fun setData(newList: ArrayList<MyData>) {
+        val myDiffUtil = MyDiffUtil(listOfRecord, newList)
         val results = DiffUtil.calculateDiff(myDiffUtil)
         this.listOfRecord.clear()
         this.listOfRecord.addAll(newList)
 //        listOfRecord = newList
-        notifyDataSetChanged()
-//        results.dispatchUpdatesTo(this)
+//        notifyDataSetChanged()
+        results.dispatchUpdatesTo(this)
+//        try {
+//            results.dispatchUpdatesTo(this)
+//        }catch (e:Exception){
+//            println(e.message)
+//            println(e.cause)
+//            println(e.toString())
+//        }
     }
 }

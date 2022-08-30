@@ -1,28 +1,27 @@
 package com.example.expensestracker.data
 
 import android.content.ContentValues
+import android.database.Cursor
 import com.example.expensestracker.constants.Constants.Companion.TABLE_NAME
+import com.example.expensestracker.databinding.PopUpLayoutBinding
 
 class MyData {
-    var time: Long = 0
-    var name: String = ""
+    var time: String
     var amount: Int = 0
     var description: String = ""
-    var isIncome: Boolean = false
+    var isIncome: Int = 0
     var totalAmountBefore: Int = 0
     var totalAmountAfter: Int = 0
 
     constructor(
-        time: Long,
-        name: String,
+        time: String,
         amount: Int,
         description: String,
-        isIncome: Boolean,
+        isIncome: Int,
         totalAmountBefore: Int,
         totalAmountAfter: Int,
     ) {
         this.time = time
-        this.name = name
         this.amount = amount
         this.description = description
         this.isIncome = isIncome
@@ -30,21 +29,51 @@ class MyData {
         this.totalAmountAfter = totalAmountAfter
     }
 
+    constructor(cursor: Cursor) {
+        cursor.apply {
+            time = cursor.getString(0)
+            description = cursor.getString(1)
+            amount = cursor.getInt(2)
+            isIncome = cursor.getInt(3)
+        }
+    }
 
     companion object {
         fun getTableCreationQuery(): String {
             val query =
-                "CREATE TABLE $TABLE_NAME (TIME TEXT PRIMARY KEY, NAME TEXT, AMOUNT INTEGER," +
-                        " ISINCOME INTEGER, TOTALAMOUNTBEFORE INTEGER, TOTALAMOUNTAFTER INTEGER)"
+                "CREATE TABLE $TABLE_NAME (TIME TEXT PRIMARY KEY, DETAILS TEXT, AMOUNT INTEGER," +
+                        "  ISINCOME INTEGER, TOTALAMOUNTBEFORE INTEGER, TOTALAMOUNTAFTER INTEGER);"
             return query
         }
 
         fun getAddingRecordQuery(data: MyData): String {
-            return " "
+            return "INSERT INTO $TABLE_NAME VALUES (${data.time}, ${data.amount}," +
+                    "${data.description} ${data.isIncome}, ${data.totalAmountBefore}, ${data.totalAmountAfter});";
         }
 
-        fun getContentValues(data: MyData): ContentValues {
-            return ContentValues()
+        fun getContentValues(dialogBinding: PopUpLayoutBinding, time: String): ContentValues? {
+            val data = getDataFromDialog(dialogBinding, time) ?: return null
+            val cv = ContentValues()
+            cv.put("TIME", time)
+            cv.put("DETAILS", data.description)
+            cv.put("AMOUNT", data.amount)
+            cv.put("ISINCOME", data.isIncome)
+            cv.put("TOTALAMOUNTBEFORE", data.totalAmountBefore)
+            cv.put("TOTALAMOUNTAFTER", data.totalAmountAfter)
+
+            return cv;
+        }
+
+        private fun getDataFromDialog(dialogBinding: PopUpLayoutBinding, time: String): MyData? {
+            if (dialogBinding.amountTxt.text.isEmpty())
+                return null
+            val amount = dialogBinding.amountTxt.text.toString().toInt()
+
+            val details =
+                if (dialogBinding.descTxt.text.isEmpty()) " " else dialogBinding.descTxt.text.toString()
+
+            val isIncome = if (dialogBinding.spentBtn.isChecked) 0 else 1
+            return MyData(time, amount, details, isIncome, 0, 0)
         }
     }
 
@@ -55,7 +84,6 @@ class MyData {
         other as MyData
 
         if (time != other.time) return false
-        if (name != other.name) return false
         if (amount != other.amount) return false
         if (description != other.description) return false
         if (isIncome != other.isIncome) return false
@@ -67,12 +95,16 @@ class MyData {
 
     override fun hashCode(): Int {
         var result = time.hashCode()
-        result = 31 * result + name.hashCode()
         result = 31 * result + amount
         result = 31 * result + description.hashCode()
         result = 31 * result + isIncome.hashCode()
         result = 31 * result + totalAmountBefore
         result = 31 * result + totalAmountAfter
         return result
+    }
+
+    override fun toString(): String {
+        return "MyData(time='$time', amount=$amount, description='$description', isIncome=$isIncome, " +
+                "totalAmountBefore=$totalAmountBefore, totalAmountAfter=$totalAmountAfter)"
     }
 }
