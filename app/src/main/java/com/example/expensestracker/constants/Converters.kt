@@ -25,6 +25,10 @@ class Converters {
             return formatterDate.format(time)
         }
 
+        fun getFormattedTime(time: Date): String {
+            return formatterTime.format(time)
+        }
+
         fun getMilliSecond(date: String): String {
             val dates = date.split("/")
             val calender = Calendar.getInstance()

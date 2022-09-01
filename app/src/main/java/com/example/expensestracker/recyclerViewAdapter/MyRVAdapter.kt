@@ -34,17 +34,13 @@ class MyRVAdapter(private val activity: MainActivity) :
 
     private fun bindData(binding: RvLayoutBinding, record: MyData, pos: Int) {
         val dateTime = getDate(record.time.toLong())
-        println("$pos -> ${dateTime[0]}  ||  ${dateTime[1]}")
-        println(record.toString())
 
         binding.rootLay.setBackgroundResource(if (record.isIncome == 1) R.drawable.round_corner_green else R.drawable.round_corner_red)
-
         binding.light.setBackgroundResource(if (record.isIncome == 1) R.drawable.green_circle else R.drawable.red_circle)
+
         binding.incomeOrNotTxt.text = if (record.isIncome == 1) "Earned" else "Spent"
         binding.dateTxt.text = dateTime[0]
         binding.timeTxt.text = dateTime[1]
-
-//        val amount = "${activity.resources.getText(R.string.Rs)} ${record.amount}"
         binding.amountTxt.text = record.amount.toString()
 
         val desc = if (record.description.length > 20) {

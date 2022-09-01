@@ -1,6 +1,7 @@
 package com.example.expensestracker
 
 import android.os.Bundle
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,10 +42,36 @@ class MainActivity : AppCompatActivity() {
             addUpdateDialog.startLoading()
         }
 
-        binding.toolBar.setOnClickListener {
+        binding.menuBtn.setOnClickListener {
             val dialog = FilterDateDialog(this, this)
             dialog.startLoading()
         }
+
+        binding.searchBox.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                var queryTxt = p0 ?: ""
+                queryTxt = "%$queryTxt%"
+                loadSearchData(queryTxt, myRVAdapter)
+                return false
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                onQueryTextSubmit(p0)
+                return false
+            }
+
+        })
+    }
+
+    private fun loadSearchData(queryTxt: String, adapter: MyRVAdapter) {
+        val searchedRecords = ArrayList<MyData>()
+        val cursor = myDB.readSearchedData(queryTxt) ?: return
+        println(cursor.count)
+        while (cursor.moveToNext()) {
+            val data = MyData(cursor)
+            searchedRecords.add(data)
+        }
+        adapter.setData(searchedRecords)
     }
 
     private fun loadAllData(adapter: MyRVAdapter) {
@@ -54,9 +81,8 @@ class MainActivity : AppCompatActivity() {
         while (cursor.moveToNext()) {
             val data = MyData(cursor)
             allRecord.add(data)
-//            println(data)
         }
-        myRVAdapter.setData(allRecord)
+        adapter.setData(allRecord)
     }
 
     private fun addRecord(dialogBinding: PopUpLayoutBinding, time: String) {

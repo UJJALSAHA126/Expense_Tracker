@@ -42,8 +42,11 @@ class FilterDateDialog(private val context: Context, private val activity: MainA
         binding.filteredRv.adapter = adapter
         binding.filteredRv.layoutManager = LinearLayoutManager(context)
 
-        binding.startDate.text = Converters.getFormattedDate(statDate.time)
-        binding.endDate.text = Converters.getFormattedDate(endDate.time)
+        val currTime =
+            Converters.getFormattedDate(statDate.time)
+
+        binding.startDate.text = currTime
+        binding.endDate.text = currTime
 
         val year = statDate.get(Calendar.YEAR)
         val month = statDate.get(Calendar.MONTH)
@@ -73,7 +76,6 @@ class FilterDateDialog(private val context: Context, private val activity: MainA
         binding.filterBtn.setOnClickListener {
             loadData()
         }
-
         loadData()
     }
 
@@ -82,7 +84,6 @@ class FilterDateDialog(private val context: Context, private val activity: MainA
             myDb.getFilteredData(statDate.timeInMillis.toString(), endDate.timeInMillis.toString())
                 ?: return
         val filteredData = ArrayList<MyData>()
-        println("Size = " + cursor.count)
         while (cursor.moveToNext()) {
             filteredData.add(MyData(cursor))
         }

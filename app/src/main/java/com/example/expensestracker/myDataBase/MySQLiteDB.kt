@@ -24,10 +24,7 @@ class MySQLiteDB(private var context: Context) :
         onCreate(p0)
     }
 
-    public fun addNewRecord(cv: ContentValues) {
-//        val query = MyData.getAddingRecordQuery(data)
-//        writableDatabase.execSQL(query)
-
+    fun addNewRecord(cv: ContentValues) {
         val results = writableDatabase.insert(TABLE_NAME, null, cv)
         if (results != -1L) {
             Toast.makeText(context, "Record Added Successfully", Toast.LENGTH_SHORT).show()
@@ -41,7 +38,15 @@ class MySQLiteDB(private var context: Context) :
     }
 
     fun getFilteredData(timeS: String, timeE: String): Cursor? {
-        val query = "SELECT * FROM $TABLE_NAME WHERE TIME >= $timeS AND TIME <= $timeE ORDER BY TIME DESC"
+        val query =
+            "SELECT * FROM $TABLE_NAME WHERE TIME >= $timeS AND TIME <= $timeE ORDER BY TIME DESC"
+        val db = this.readableDatabase ?: return null
+        return db.rawQuery(query, null)
+    }
+
+    fun readSearchedData(queryTxt: String): Cursor? {
+        val query =
+            "SELECT * FROM $TABLE_NAME WHERE DETAILS LIKE \"$queryTxt\" ORDER BY TIME DESC"
         val db = this.readableDatabase ?: return null
         return db.rawQuery(query, null)
     }
