@@ -6,6 +6,7 @@
         <entry key="..\:/AndroidAppsProjects/ExpensesTracker/app/src/main/res/drawable/add_icon.xml" value="0.1945" />
         <entry key="..\:/AndroidAppsProjects/ExpensesTracker/app/src/main/res/drawable/amount_back.xml" value="0.1945" />
         <entry key="..\:/AndroidAppsProjects/ExpensesTracker/app/src/main/res/drawable/circle.xml" value="0.1935" />
+        <entry key="..\:/AndroidAppsProjects/ExpensesTracker/app/src/main/res/drawable/ic_baseline_delete_forever_24.xml" value="0.1945" />
         <entry key="..\:/AndroidAppsProjects/ExpensesTracker/app/src/main/res/drawable/pop_up_back.xml" value="0.1935" />
         <entry key="..\:/AndroidAppsProjects/ExpensesTracker/app/src/main/res/drawable/red_circle.xml" value="0.1945" />
         <entry key="..\:/AndroidAppsProjects/ExpensesTracker/app/src/main/res/drawable/round_back_10.xml" value="0.1945" />
@@ -18,6 +19,7 @@
         <entry key="..\:/AndroidAppsProjects/ExpensesTracker/app/src/main/res/layout/filter_date_pop_up_layout.xml" value="0.33" />
         <entry key="..\:/AndroidAppsProjects/ExpensesTracker/app/src/main/res/layout/pop_up_layout.xml" value="0.33" />
         <entry key="..\:/AndroidAppsProjects/ExpensesTracker/app/src/main/res/layout/rv_layout.xml" value="0.5" />
+        <entry key="..\:/AndroidAppsProjects/ExpensesTracker/app/src/main/res/menu/home_menu.xml" value="0.33" />
       </map>
     </option>
   </component>

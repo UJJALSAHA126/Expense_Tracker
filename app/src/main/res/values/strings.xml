@@ -15,4 +15,6 @@
     <string name="filter">Filter</string>
     <string name="search_records_between_two_dates">Search Records Between Two Dates</string>
     <string name="menu_button">Menu Button</string>
+    <string name="menu_item_0">Filter Using Date</string>
+    <string name="menu_item_1">Delete All Records</string>
 </resources>

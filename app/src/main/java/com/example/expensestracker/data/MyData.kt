@@ -53,8 +53,12 @@ class MyData {
 
         fun getContentValues(dialogBinding: PopUpLayoutBinding, time: String): ContentValues? {
             val data = getDataFromDialog(dialogBinding, time) ?: return null
+            return getContentValues(data)
+        }
+
+        fun getContentValues(data: MyData): ContentValues {
             val cv = ContentValues()
-            cv.put("TIME", time)
+            cv.put("TIME", data.time)
             cv.put("DETAILS", data.description)
             cv.put("AMOUNT", data.amount)
             cv.put("ISINCOME", data.isIncome)

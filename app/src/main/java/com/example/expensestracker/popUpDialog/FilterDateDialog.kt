@@ -16,12 +16,16 @@ import java.util.*
 
 class FilterDateDialog(private val context: Context, private val activity: MainActivity) {
 
-    private var dialog: Dialog? = null
-    private val statDate: Calendar = Calendar.getInstance()
-    private val endDate: Calendar = Calendar.getInstance()
     private var _binding: FilterDatePopUpLayoutBinding? = null
     private val binding get() = _binding!!
+
+    private var dialog: Dialog? = null
+
+    private val statDate: Calendar = Calendar.getInstance()
+    private val endDate: Calendar = Calendar.getInstance()
+
     private lateinit var adapter: MyRVAdapter
+
     private var myDb = MySQLiteDB(context)
 
     fun startLoading() {
@@ -35,9 +39,10 @@ class FilterDateDialog(private val context: Context, private val activity: MainA
             setCancelable(true)
             setCanceledOnTouchOutside(true)
             window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT)
+                ViewGroup.LayoutParams.MATCH_PARENT)
             show()
         }
+
         adapter = MyRVAdapter(activity)
         binding.filteredRv.adapter = adapter
         binding.filteredRv.layoutManager = LinearLayoutManager(context)
@@ -76,7 +81,7 @@ class FilterDateDialog(private val context: Context, private val activity: MainA
         binding.filterBtn.setOnClickListener {
             loadData()
         }
-        loadData()
+
     }
 
     private fun loadData() {

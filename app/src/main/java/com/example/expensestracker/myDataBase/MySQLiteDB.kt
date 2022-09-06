@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.widget.Toast
 import com.example.expensestracker.constants.Constants.Companion.TABLE_NAME
 import com.example.expensestracker.constants.Constants.Companion.VERSION
+import com.example.expensestracker.data.MyData
 
 class MySQLiteDB(private var context: Context) :
     SQLiteOpenHelper(context, TABLE_NAME, null, VERSION) {
@@ -29,6 +30,12 @@ class MySQLiteDB(private var context: Context) :
         if (results != -1L) {
             Toast.makeText(context, "Record Added Successfully", Toast.LENGTH_SHORT).show()
         } else Toast.makeText(context, "Something Went Wrong !", Toast.LENGTH_SHORT).show()
+    }
+
+    fun deleteRecord(data: MyData) {
+        val query = "DELETE FROM $TABLE_NAME WHERE TIME = '${data.time}'"
+        val db = this.readableDatabase ?: return
+        db.execSQL(query)
     }
 
     fun readAllData(): Cursor? {

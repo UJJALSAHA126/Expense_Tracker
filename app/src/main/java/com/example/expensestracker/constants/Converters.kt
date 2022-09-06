@@ -13,11 +13,12 @@ class Converters {
         val formatterTime = SimpleDateFormat("hh:mm a")
 
         fun getDate(millis: Long): ArrayList<String> {
-
             val calender = Calendar.getInstance()
             calender.timeInMillis = millis
-            val date = formatterDate.format(calender.time)
-            val time = formatterTime.format(calender.time)
+
+            val date = getFormattedDate(calender.time)
+            val time = getFormattedTime(calender.time)
+
             return arrayListOf(date, time)
         }
 
@@ -32,7 +33,6 @@ class Converters {
         fun getMilliSecond(date: String): String {
             val dates = date.split("/")
             val calender = Calendar.getInstance()
-            for (d in dates) println(d.toInt())
 
             calender.set(dates[2].toInt(), dates[1].toInt() - 1, dates[0].toInt())
             return calender.timeInMillis.toString()

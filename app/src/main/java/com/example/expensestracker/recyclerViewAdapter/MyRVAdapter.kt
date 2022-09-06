@@ -15,7 +15,6 @@ class MyRVAdapter(private val activity: MainActivity) :
     RecyclerView.Adapter<MyRVAdapter.MYRVViewHolder>() {
 
     private var listOfRecord = ArrayList<MyData>()
-//    private val myDiffUtil = MyDiffUtil()
 
     inner class MYRVViewHolder(val binding: RvLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -63,12 +62,26 @@ class MyRVAdapter(private val activity: MainActivity) :
 //        listOfRecord = newList
 //        notifyDataSetChanged()
         results.dispatchUpdatesTo(this)
-//        try {
-//            results.dispatchUpdatesTo(this)
-//        }catch (e:Exception){
-//            println(e.message)
-//            println(e.cause)
-//            println(e.toString())
-//        }
     }
+
+    fun getDataAtIndex(index: Int): MyData? {
+        if (index < 0 || index >= listOfRecord.size)
+            return null
+        return listOfRecord[index]
+    }
+
+    fun addDataAtIndex(index: Int, data: MyData) {
+        if (index < 0)
+            return
+        listOfRecord.add(index, data)
+        notifyItemInserted(index)
+    }
+
+    fun removeDataFromIndex(index: Int) {
+        if (index < 0 || index >= listOfRecord.size)
+            return
+        listOfRecord.removeAt(index)
+        notifyItemRemoved(index)
+    }
+
 }
