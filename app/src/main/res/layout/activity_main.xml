@@ -31,7 +31,7 @@
             android:iconifiedByDefault="false"
             android:inputType="text"
             android:queryBackground="@android:color/transparent"
-            android:queryHint="Search with name"
+            android:queryHint="Search Records"
             android:textAlignment="textStart"
             app:defaultQueryHint="Search with name" />
 

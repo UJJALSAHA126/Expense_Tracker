@@ -3,12 +3,11 @@ package com.example.expensestracker
 import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
-import android.view.ContextMenu
-import android.view.MenuItem
-import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,13 +32,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        myRVAdapter = MyRVAdapter(this)
+        myRVAdapter = MyRVAdapter(this) { pos ->
+            deleteARecord(pos)
+        }
+
         binding.recordsRV.adapter = myRVAdapter
         binding.recordsRV.layoutManager = LinearLayoutManager(this)
 
         loadAllData(myRVAdapter)
 
-        registerForContextMenu(binding.menuBtn)
+//        registerForContextMenu(binding.menuBtn)
 
         binding.addRecordFAB.setOnClickListener {
             val addUpdateDialog = AddUpdateDialog(this, this, null, { dialog, binding, time ->
@@ -53,11 +55,41 @@ class MainActivity : AppCompatActivity() {
             addUpdateDialog.startLoading()
         }
 
-//        binding.menuBtn.setOnClickListener {
-//            val dialog = FilterDateDialog(this, this)
-//            dialog.startLoading()
-//            Toast.makeText(this, "Menu Clicked", Toast.LENGTH_SHORT).show()
-//        }
+        // Creating The PopupMenu
+        binding.menuBtn.setOnClickListener {
+            val popupMenu = PopupMenu(it.context, it)
+            popupMenu.inflate(R.menu.home_menu)
+
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.filterDateMenuBtn -> {
+                        val dialog = FilterDateDialog(this, this)
+                        dialog.startLoading()
+                    }
+                    R.id.deleteAllMenuBtn -> {
+                        val alertDialog = AlertDialog.Builder(this)
+                        alertDialog.setTitle("You want to delete all the records ?")
+                            .setCancelable(true)
+                            .setNegativeButton("No") { _, _ -> }
+                            .setPositiveButton("Yes"
+                            ) { _, _ ->
+                                val isDeleted = myDB.deleteAllRecords()
+                                if (!isDeleted) return@setPositiveButton
+
+                                loadAllData(myRVAdapter)
+                                Toast.makeText(this,
+                                    "All the records are successfully deleted !",
+                                    Toast.LENGTH_SHORT).show()
+                            }
+                            .show()
+                    }
+                }
+                false
+            }
+
+            popupMenu.show()
+
+        }
 
         binding.searchBox.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(p0: String?): Boolean {
@@ -81,8 +113,7 @@ class MainActivity : AppCompatActivity() {
         val simpleCallback = object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
+                recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder,
             ): Boolean {
                 return false;
@@ -90,21 +121,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val index = viewHolder.bindingAdapterPosition
-
-                lastDeletedData = myRVAdapter.getDataAtIndex(index)
-                lastDeletedDataIndex = index
-                myRVAdapter.removeDataFromIndex(index)
-
-                lastDeletedData?.let { myDB.deleteRecord(it) }
-
-                Snackbar.make(binding.recordsRV, "One record is deleted !", Snackbar.LENGTH_LONG)
-                    .setAction("Undo") {
-                        lastDeletedData?.also {
-                            myRVAdapter.addDataAtIndex(lastDeletedDataIndex, it)
-                            myDB.addNewRecord(MyData.getContentValues(it))
-                        }
-                    }
-                    .show()
+                deleteARecord(index)
             }
 
             override fun onChildDraw(
@@ -151,6 +168,23 @@ class MainActivity : AppCompatActivity() {
         cv?.also { myDB.addNewRecord(it) }
     }
 
+    private fun deleteARecord(index: Int) {
+        val lastDeletedData: MyData? = myRVAdapter.getDataAtIndex(index)
+        val lastDeletedDataIndex: Int = index
+
+        myRVAdapter.removeDataFromIndex(index)
+        lastDeletedData?.let { myDB.deleteRecord(it) }
+
+        Snackbar.make(binding.recordsRV, "One record is deleted !", Snackbar.LENGTH_LONG)
+            .setAction("Undo") {
+                lastDeletedData?.also {
+                    myRVAdapter.addDataAtIndex(lastDeletedDataIndex, it)
+                    myDB.addNewRecord(MyData.getContentValues(it))
+                }
+            }
+            .show()
+    }
+
     fun getSwipeDecorator(
         c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
         dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean,
@@ -168,30 +202,4 @@ class MainActivity : AppCompatActivity() {
             .addActionIcon(R.drawable.delete_icon)
     }
 
-    // Creating The Menu Button
-    override fun onCreateContextMenu(
-        menu: ContextMenu?,
-        v: View?,
-        menuInfo: ContextMenu.ContextMenuInfo?,
-    ) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-        menuInflater.inflate(R.menu.home_menu, menu)
-        Toast.makeText(this, "Menu Created", Toast.LENGTH_SHORT).show()
-        println("Menu Created")
-    }
-
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.filterDateMenuBtn -> {
-                val dialog = FilterDateDialog(this, this)
-                dialog.startLoading()
-                return true
-            }
-            R.id.deleteAllMenuBtn -> {
-                Toast.makeText(this, "All Items Has Been Selected", Toast.LENGTH_SHORT).show()
-                return true
-            }
-        }
-        return super.onContextItemSelected(item)
-    }
 }

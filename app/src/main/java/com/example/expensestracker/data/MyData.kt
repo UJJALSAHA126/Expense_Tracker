@@ -12,14 +12,11 @@ class MyData {
     var isIncome: Int = 0
     var totalAmountBefore: Int = 0
     var totalAmountAfter: Int = 0
+    var isExpanded: Boolean = false
 
     constructor(
-        time: String,
-        amount: Int,
-        description: String,
-        isIncome: Int,
-        totalAmountBefore: Int,
-        totalAmountAfter: Int,
+        time: String, amount: Int, description: String,
+        isIncome: Int, totalAmountBefore: Int, totalAmountAfter: Int,
     ) {
         this.time = time
         this.amount = amount

@@ -43,7 +43,7 @@ class FilterDateDialog(private val context: Context, private val activity: MainA
             show()
         }
 
-        adapter = MyRVAdapter(activity)
+        adapter = MyRVAdapter(activity) { _ -> }
         binding.filteredRv.adapter = adapter
         binding.filteredRv.layoutManager = LinearLayoutManager(context)
 

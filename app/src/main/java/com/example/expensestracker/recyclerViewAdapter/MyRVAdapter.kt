@@ -1,6 +1,7 @@
 package com.example.expensestracker.recyclerViewAdapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -11,10 +12,11 @@ import com.example.expensestracker.data.MyData
 import com.example.expensestracker.databinding.RvLayoutBinding
 import com.example.expensestracker.recyclerViewAdapter.diffUtil.MyDiffUtil
 
-class MyRVAdapter(private val activity: MainActivity) :
+class MyRVAdapter(private val activity: MainActivity, private val recordDelete: (Int) -> Unit) :
     RecyclerView.Adapter<MyRVAdapter.MYRVViewHolder>() {
 
     private var listOfRecord = ArrayList<MyData>()
+    var lastExpandedIndex = -1
 
     inner class MYRVViewHolder(val binding: RvLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -28,11 +30,13 @@ class MyRVAdapter(private val activity: MainActivity) :
     override fun onBindViewHolder(holder: MYRVViewHolder, position: Int) {
         val binding = holder.binding
         val record = listOfRecord[position]
-        bindData(binding, record, position + 1)
+        bindData(binding, record, position)
     }
 
     private fun bindData(binding: RvLayoutBinding, record: MyData, pos: Int) {
         val dateTime = getDate(record.time.toLong())
+
+        binding.bottomLayout.visibility = if (record.isExpanded) View.VISIBLE else View.GONE
 
         binding.rootLay.setBackgroundResource(if (record.isIncome == 1) R.drawable.round_corner_green else R.drawable.round_corner_red)
         binding.light.setBackgroundResource(if (record.isIncome == 1) R.drawable.green_circle else R.drawable.red_circle)
@@ -48,6 +52,22 @@ class MyRVAdapter(private val activity: MainActivity) :
 
         binding.descriptionTxt.text = desc
 
+        binding.root.setOnClickListener {
+            listOfRecord[pos].isExpanded = !listOfRecord[pos].isExpanded
+            notifyItemChanged(pos)
+
+            if (lastExpandedIndex != pos && lastExpandedIndex >= 0 && lastExpandedIndex < listOfRecord.size) {
+                listOfRecord[lastExpandedIndex].isExpanded = false
+                notifyItemChanged(lastExpandedIndex)
+            }
+
+            lastExpandedIndex = pos
+        }
+
+        binding.deleteRecord.setOnClickListener {
+            recordDelete(pos)
+        }
+
     }
 
     override fun getItemCount(): Int {
@@ -59,8 +79,6 @@ class MyRVAdapter(private val activity: MainActivity) :
         val results = DiffUtil.calculateDiff(myDiffUtil)
         this.listOfRecord.clear()
         this.listOfRecord.addAll(newList)
-//        listOfRecord = newList
-//        notifyDataSetChanged()
         results.dispatchUpdatesTo(this)
     }
 
