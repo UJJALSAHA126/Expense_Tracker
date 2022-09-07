@@ -41,8 +41,6 @@ class MainActivity : AppCompatActivity() {
 
         loadAllData(myRVAdapter)
 
-//        registerForContextMenu(binding.menuBtn)
-
         binding.addRecordFAB.setOnClickListener {
             val addUpdateDialog = AddUpdateDialog(this, this, null, { dialog, binding, time ->
                 addRecord(binding, time)
