@@ -26,15 +26,31 @@ class MainActivity : AppCompatActivity() {
     private lateinit var myRVAdapter: MyRVAdapter
 
     private val myDB = MySQLiteDB(this)
+    private lateinit var allRecord: ArrayList<MyData>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        myRVAdapter = MyRVAdapter(this) { pos ->
+        allRecord = ArrayList()
+
+        myRVAdapter = MyRVAdapter(this, { pos ->
             deleteARecord(pos)
-        }
+        }, { pos ->
+            val record = allRecord[pos]
+            val addUpdateDialog = AddUpdateDialog(this, this, record, { dialog, binding, time, data ->
+                data?.also {
+                    myDB.deleteRecord(data)
+                }
+                addRecord(binding, time)
+                loadAllData(myRVAdapter)
+                dialog.stopLoading()
+            }, {
+                it.stopLoading()
+            })
+            addUpdateDialog.startLoading()
+        })
 
         binding.recordsRV.adapter = myRVAdapter
         binding.recordsRV.layoutManager = LinearLayoutManager(this)
@@ -42,9 +58,11 @@ class MainActivity : AppCompatActivity() {
         loadAllData(myRVAdapter)
 
         binding.addRecordFAB.setOnClickListener {
-            val addUpdateDialog = AddUpdateDialog(this, this, null, { dialog, binding, time ->
+            val addUpdateDialog = AddUpdateDialog(this, this, null, { dialog, binding, time, data ->
+                data?.also {
+                    myDB.deleteRecord(data)
+                }
                 addRecord(binding, time)
-                Toast.makeText(this, "Add Clicked", Toast.LENGTH_SHORT).show()
                 loadAllData(myRVAdapter)
                 dialog.stopLoading()
             }, {
@@ -151,7 +169,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadAllData(adapter: MyRVAdapter) {
-        val allRecord = ArrayList<MyData>()
+        allRecord = ArrayList<MyData>()
         val cursor = myDB.readAllData() ?: return
 
         while (cursor.moveToNext()) {

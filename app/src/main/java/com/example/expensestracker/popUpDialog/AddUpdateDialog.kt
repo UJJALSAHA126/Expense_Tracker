@@ -9,6 +9,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
+import com.example.expensestracker.constants.Converters
 import com.example.expensestracker.data.MyData
 import com.example.expensestracker.databinding.PopUpLayoutBinding
 import java.text.SimpleDateFormat
@@ -18,7 +19,9 @@ class AddUpdateDialog(
     private val activity: Activity,
     private val context: Context,
     private val data: MyData? = null,
-    private val addClicked: (AddUpdateDialog, PopUpLayoutBinding, String) -> Unit,
+    private val addClicked: (
+        AddUpdateDialog, PopUpLayoutBinding, String, MyData?,
+    ) -> Unit,
     private val cancelClicked: (AddUpdateDialog) -> Unit,
 ) {
 
@@ -30,12 +33,14 @@ class AddUpdateDialog(
     @SuppressLint("SimpleDateFormat")
     val formatterT = SimpleDateFormat("hh:mm a")
 
+    private var c = Calendar.getInstance()
+
     fun startLoading() {
         dialog = Dialog(context)
         val binding =
             PopUpLayoutBinding.inflate(LayoutInflater.from(context), null, false)
 
-        val c = Calendar.getInstance()
+        c = Calendar.getInstance()
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
@@ -50,14 +55,10 @@ class AddUpdateDialog(
             show()
         }
 
-        binding.dateTxt.text = formatter.format(c.time)
-        binding.timeTxt.text = formatterT.format(c.time)
-        binding.earnedBtn.isChecked = true
-
-        data?.let {
-            "Update".also { binding.addUpdateBtn.text = it }
-            binding.amountTxt.setText(data.amount)
-            binding.descTxt.setText(data.description)
+        if (data == null) {
+            binding.dateTxt.text = formatter.format(c.time)
+            binding.timeTxt.text = formatterT.format(c.time)
+            binding.earnedBtn.isChecked = true
         }
 
         binding.dateTxt.setOnClickListener {
@@ -73,6 +74,7 @@ class AddUpdateDialog(
             val timePicker = TimePickerDialog.OnTimeSetListener { _, t, t2 ->
                 c.set(Calendar.HOUR_OF_DAY, t)
                 c.set(Calendar.MINUTE, t2)
+//                println("T = $t | T2 = $t2")
                 binding.timeTxt.text = formatterT.format(c.time)
             }
             val dialog = TimePickerDialog(context, timePicker, hour, minute, false)
@@ -80,14 +82,36 @@ class AddUpdateDialog(
         }
 
         binding.addUpdateBtn.setOnClickListener {
-            addClicked(this, binding, c.timeInMillis.toString())
+            addClicked(this, binding, c.timeInMillis.toString(), data)
         }
         binding.cancelBtn.setOnClickListener {
             cancelClicked(this)
+        }
+
+        data?.also {
+            bindData(it, binding)
         }
     }
 
     fun stopLoading() {
         dialog?.dismiss()
+    }
+
+    private fun bindData(data: MyData, binding: PopUpLayoutBinding) {
+        "Update".also { binding.addUpdateBtn.text = it }
+        binding.amountTxt.setText(data.amount.toString())
+        binding.descTxt.setText(data.description)
+        if (data.isIncome != 0) {
+            binding.earnedBtn.isChecked = true
+            binding.spentBtn.isChecked = false
+        } else {
+            binding.earnedBtn.isChecked = false
+            binding.spentBtn.isChecked = true
+        }
+
+        c.timeInMillis = data.time.toLong()
+        binding.dateTxt.text = Converters.getFormattedDate(c.time)
+        binding.timeTxt.text = Converters.getFormattedTime(c.time)
+
     }
 }

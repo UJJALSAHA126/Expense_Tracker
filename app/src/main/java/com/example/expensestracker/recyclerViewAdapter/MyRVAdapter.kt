@@ -12,7 +12,11 @@ import com.example.expensestracker.data.MyData
 import com.example.expensestracker.databinding.RvLayoutBinding
 import com.example.expensestracker.recyclerViewAdapter.diffUtil.MyDiffUtil
 
-class MyRVAdapter(private val activity: MainActivity, private val recordDelete: (Int) -> Unit) :
+class MyRVAdapter(
+    private val activity: MainActivity,
+    private val recordDelete: (Int) -> Unit,
+    private val updateRecord: (Int) -> Unit,
+) :
     RecyclerView.Adapter<MyRVAdapter.MYRVViewHolder>() {
 
     private var listOfRecord = ArrayList<MyData>()
@@ -53,6 +57,7 @@ class MyRVAdapter(private val activity: MainActivity, private val recordDelete: 
         binding.descriptionTxt.text = desc
 
         binding.root.setOnClickListener {
+            println(pos)
             listOfRecord[pos].isExpanded = !listOfRecord[pos].isExpanded
             notifyItemChanged(pos)
 
@@ -66,6 +71,10 @@ class MyRVAdapter(private val activity: MainActivity, private val recordDelete: 
 
         binding.deleteRecord.setOnClickListener {
             recordDelete(pos)
+        }
+
+        binding.updateRecord.setOnClickListener {
+            updateRecord(pos)
         }
 
     }

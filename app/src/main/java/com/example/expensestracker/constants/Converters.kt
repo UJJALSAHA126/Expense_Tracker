@@ -26,8 +26,20 @@ class Converters {
             return formatterDate.format(time)
         }
 
+        fun getFormattedDate(time: Long): String {
+            val c = Calendar.getInstance()
+            c.timeInMillis = time
+            return getFormattedDate(c.time)
+        }
+
         fun getFormattedTime(time: Date): String {
             return formatterTime.format(time)
+        }
+
+        fun getFormattedTime(time: Long): String {
+            val c = Calendar.getInstance()
+            c.timeInMillis = time
+            return getFormattedTime(c.time)
         }
 
         fun getMilliSecond(date: String): String {

@@ -21,7 +21,7 @@ class FilterDateDialog(private val context: Context, private val activity: MainA
 
     private var dialog: Dialog? = null
 
-    private val statDate: Calendar = Calendar.getInstance()
+    private val startDate: Calendar = Calendar.getInstance()
     private val endDate: Calendar = Calendar.getInstance()
 
     private lateinit var adapter: MyRVAdapter
@@ -43,27 +43,30 @@ class FilterDateDialog(private val context: Context, private val activity: MainA
             show()
         }
 
-        adapter = MyRVAdapter(activity) { _ -> }
+        adapter = MyRVAdapter(activity, { _ -> }, { _ -> })
         binding.filteredRv.adapter = adapter
         binding.filteredRv.layoutManager = LinearLayoutManager(context)
 
         val currTime =
-            Converters.getFormattedDate(statDate.time)
+            Converters.getFormattedDate(startDate.time)
 
         binding.startDate.text = currTime
         binding.endDate.text = currTime
 
-        val year = statDate.get(Calendar.YEAR)
-        val month = statDate.get(Calendar.MONTH)
-        val date = statDate.get(Calendar.DAY_OF_MONTH)
+        val year = startDate.get(Calendar.YEAR)
+        val month = startDate.get(Calendar.MONTH)
+        val date = startDate.get(Calendar.DAY_OF_MONTH)
 
-        println("Triple Equal" + (statDate === endDate))
-        println("Double Equal" + (statDate == endDate))
+        startDate.set(year, month, date, 0, 0, 0)
+        endDate.set(year, month, date, 23, 59, 59)
+
+//        println("Triple Equal" + (statDate === endDate))
+//        println("Double Equal" + (statDate == endDate))
 
         binding.startDate.setOnClickListener {
             val pickerListener = DatePickerDialog.OnDateSetListener { _, y, m, d ->
-                statDate.set(y, m, d)
-                binding.startDate.text = Converters.getFormattedDate(statDate.time)
+                startDate.set(y, m, d)
+                binding.startDate.text = Converters.getFormattedDate(startDate.time)
             }
             DatePickerDialog(context, pickerListener, year, month, date)
                 .show()
@@ -71,7 +74,7 @@ class FilterDateDialog(private val context: Context, private val activity: MainA
 
         binding.endDate.setOnClickListener {
             val pickerListener = DatePickerDialog.OnDateSetListener { _, y, m, d ->
-                endDate.set(y, m, d)
+                endDate.set(y, m, d, 23, 59, 59)
                 binding.endDate.text = Converters.getFormattedDate(endDate.time)
             }
             DatePickerDialog(context, pickerListener, year, month, date)
@@ -86,7 +89,7 @@ class FilterDateDialog(private val context: Context, private val activity: MainA
 
     private fun loadData() {
         val cursor =
-            myDb.getFilteredData(statDate.timeInMillis.toString(), endDate.timeInMillis.toString())
+            myDb.getFilteredData(startDate.timeInMillis.toString(), endDate.timeInMillis.toString())
                 ?: return
         val filteredData = ArrayList<MyData>()
         while (cursor.moveToNext()) {
